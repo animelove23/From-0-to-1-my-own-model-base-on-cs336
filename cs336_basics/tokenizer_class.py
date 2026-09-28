@@ -23,7 +23,7 @@ class Tokenizer:
                     new_utf_text =[]
                     long = 0
                     while long < len(a):
-                        if long!=len(a)-1and a[long]==i and a[long+1] == e:
+                        if long!=len(a)-1 and a[long]==i and a[long+1] == e:
                             new_utf_text.append(a[long]+a[long+1])
                             long+=1
                         else:

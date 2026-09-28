@@ -13,7 +13,7 @@ def pretokenization(start,end, path):
         PAT = r"'(?:[sdmt]|ll|ve|re)| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+"
         counter = Counter()
         for segment in segments:
-            for match in re.finditer(PAT, segment):
+            for match in re.finditer(PAT, segment):# 用迭代器防止一次取出大量单词而导致堵塞，运行缓慢等问题
                 counter[match.group()]+=1
         return counter
 def find_chunk_boundaries(
@@ -24,7 +24,7 @@ def find_chunk_boundaries(
     """
     Chunk the file into parts that can be counted independently.
     May return fewer chunks if the boundaries end up overlapping.
-    """
+    """ 
     assert isinstance(split_special_token, bytes), "Must represent special token as a bytestring"
 
     file.seek(0, os.SEEK_END)
@@ -71,7 +71,7 @@ def pretoken_and_statistic(input_path: str):
                 counter.update(chunk)
             new_counter = Counter()
             for k,v in counter.items():
-                btuple = (bytes([e]) for e in k.encode("utf-8"))
+                btuple = [bytes([e]) for e in k.encode("utf-8")]
                 new_counter[tuple(btuple)] = v
     return new_counter
 

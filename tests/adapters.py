@@ -286,6 +286,77 @@ def run_transformer_block(
         Float[Tensor, "batch sequence_length d_model"] Tensor with the output of
         running the Transformer block on the input features while using RoPE.
     """
+    from cs336_basics.transformer_block import TransformerBlock
+
+    seq_len = in_features.shape[-2]
+
+    # RoPE 所需要的位置：
+    # [0, 1, 2, ..., seq_len-1]
+    token_positions = torch.arange(
+        seq_len,
+        device=in_features.device
+    )
+
+    transformer = TransformerBlock(
+        dff=d_ff,
+        d_model=d_model,
+        n_heads=num_heads,
+        open_pos=True,
+        theta=theta,
+        max_seq_len=max_seq_len,
+        token_positions=token_positions
+    )
+
+    # 让模型和输入处于相同 device / dtype
+    transformer = transformer.to(
+        device=in_features.device,
+        dtype=in_features.dtype
+    )
+
+    # 把 reference implementation 的权重
+    # 塞入我们自己的 implementation
+    with torch.no_grad():
+        # -------- Attention --------
+        transformer.causal_att.w_q.copy_(
+            weights["attn.q_proj.weight"]
+        )
+
+        transformer.causal_att.w_k.copy_(
+            weights["attn.k_proj.weight"]
+        )
+
+        transformer.causal_att.w_v.copy_(
+            weights["attn.v_proj.weight"]
+        )
+
+        transformer.causal_att.w_o.copy_(
+            weights["attn.output_proj.weight"]
+        )
+
+        # -------- RMSNorm 1 --------
+        transformer.rmsnorm1.g.copy_(
+            weights["ln1.weight"]
+        )
+
+        # -------- FFN --------
+        transformer.ffn.w1_weight.copy_(
+            weights["ffn.w1.weight"]
+        )
+
+        transformer.ffn.w2_weight.copy_(
+            weights["ffn.w2.weight"]
+        )
+
+        transformer.ffn.w3_weight.copy_(
+            weights["ffn.w3.weight"]
+        )
+
+        # -------- RMSNorm 2 --------
+        transformer.rmsnorm2.g.copy_(
+            weights["ln2.weight"]
+        )
+
+    return transformer(in_features)
 
 
 
@@ -368,7 +439,100 @@ def run_transformer_lm(
         Float[Tensor, "batch_size sequence_length vocab_size"]: Tensor with the predicted unnormalized
         next-word distribution for each token.
     """
-    raise NotImplementedError
+    from cs336_basics.Transformer import Transformer
+    token_positions = torch.arange(
+        in_indices.shape[1],
+        device=in_indices.device
+    )
+
+    # 1. 创建你自己写的完整 Transformer
+    model = Transformer(
+        dff=d_ff,
+        d_model=d_model,
+        n_heads=num_heads,
+        vocab_size=vocab_size,
+        context_length=context_length,
+        num_layers=num_layers,
+        open_pos=True,
+        theta=rope_theta,
+        token_positions=token_positions,
+    )
+
+    # 让模型和输入处在同一个 device
+    model = model.to(in_indices.device)
+
+    # 2. 把测试提供的 weights 填进你自己的模型
+    with torch.no_grad():
+        # =============================
+        # Embedding
+        # =============================
+        model.embedding.embedding_matrix.copy_(
+            weights["token_embeddings.weight"]
+        )
+
+        # =============================
+        # Transformer Blocks
+        # =============================
+        for i in range(num_layers):
+            layer = model.transformer_layers[i]
+
+            # ----- RMSNorm 1 -----
+            layer.rmsnorm1.g.copy_(
+                weights[f"layers.{i}.ln1.weight"]
+            )
+
+            # ----- Attention -----
+            layer.causal_att.w_q.copy_(
+                weights[f"layers.{i}.attn.q_proj.weight"]
+            )
+
+            layer.causal_att.w_k.copy_(
+                weights[f"layers.{i}.attn.k_proj.weight"]
+            )
+
+            layer.causal_att.w_v.copy_(
+                weights[f"layers.{i}.attn.v_proj.weight"]
+            )
+
+            layer.causal_att.w_o.copy_(
+                weights[f"layers.{i}.attn.output_proj.weight"]
+            )
+
+            # ----- RMSNorm 2 -----
+            layer.rmsnorm2.g.copy_(
+                weights[f"layers.{i}.ln2.weight"]
+            )
+
+            # ----- SwiGLU FFN -----
+            layer.ffn.w1_weight.copy_(
+                weights[f"layers.{i}.ffn.w1.weight"]
+            )
+
+            layer.ffn.w2_weight.copy_(
+                weights[f"layers.{i}.ffn.w2.weight"]
+            )
+
+            layer.ffn.w3_weight.copy_(
+                weights[f"layers.{i}.ffn.w3.weight"]
+            )
+
+        # =============================
+        # Final RMSNorm
+        # =============================
+        model.RMSNorm.g.copy_(
+            weights["ln_final.weight"]
+        )
+
+        # =============================
+        # LM Head
+        # =============================
+        model.linear.weight.copy_(
+            weights["lm_head.weight"]
+        )
+
+    # 3. Forward
+    return model(in_indices)
+
 
 
 def run_rmsnorm(
@@ -466,8 +630,8 @@ def run_cross_entropy(
     Returns:
         Float[Tensor, ""]: The average cross-entropy loss across examples.
     """
-    raise NotImplementedError
-
+    from cs336_basics.cross_entropy import cross_entropy
+    return cross_entropy(inputs, targets)
 
 def run_gradient_clipping(parameters: Iterable[torch.nn.Parameter], max_l2_norm: float) -> None:
     """Given a set of parameters, clip their combined gradients to have l2 norm at most max_l2_norm.

@@ -2,7 +2,7 @@ from .pretokenization_example import pretoken_and_statistic
 from collections import Counter
 
 def bpe_tokenization(input_path, vocab_size, special_tokens):
-    vocab = {i:bytes([i]) for i in range(256)}#初始化 vocabulary， 通过bytes([])可以将0-255 转化为对应的16进制编码
+    vocab = {i:bytes([i]) for i in range(256)}#初始化 vocabulary， 将 0~255 每个可能的 byte value 转成长度为 1 的 bytes 对象
     for i in special_tokens:
         vocab[len(vocab)] = i.encode("utf-8")
     merge_groups = pretoken_and_statistic(input_path)
@@ -43,10 +43,9 @@ def bpe_tokenization(input_path, vocab_size, special_tokens):
 
 
 
-
-a,b = bpe_tokenization("/home/lianggon/cs336/data/TinyStoriesV2-GPT4-train.txt",10000,"<|endoftext|>")
-
-with open("result.txt","w") as f:
-    for k,v in a.items():
-        f.write(f"{v}\n")
+if __name__ == "__main__":
+    a,b = bpe_tokenization("/home/lianggon/cs336/data/TinyStoriesV2-GPT4-train.txt",10000,"<|endoftext|>")
+    with open("result.txt","w") as f:
+        for k,v in a.items():
+            f.write(f"{v}\n")
 
