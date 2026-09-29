@@ -11,7 +11,7 @@ class MultiHeadSelfAttention(nn.Module):
         self.theta = theta
         self.max_seq_len = max_seq_len
         self.token_positions = token_positions
-        self.rope = RoPE(theta, self.d, max_seq_len)
+        self.rope = RoPE(theta, self.d, max_seq_len) if open_pos else None
         self.open_pos = open_pos
         self.w_q = nn.Parameter(torch.empty(self.d*n_heads, d_model))
         self.w_k = nn.Parameter(torch.empty(self.d*n_heads, d_model))
@@ -43,7 +43,6 @@ class MultiHeadSelfAttention(nn.Module):
         scaled_attention= scaled_attention@self.w_o.T #  每个head学习到的是不同类型的信息, 可能是语法，指代，实体，
         # concat成整体再经过一个weight，让他学习怎么样把这些信息整理混合，才能被送进linear
         return scaled_attention
-
 
 
 
