@@ -1,8 +1,19 @@
-# Track model sources and repository metadata only.
-*
-!/.gitignore
-!/README.md
-!/LICENSE
-!/cs336_basics/
-/cs336_basics/*
-!/cs336_basics/*.py
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Large, generated, or downloaded datasets and reference fixtures.
+data/
+tests/fixtures/
+tests/_snapshots/
+*.pt
+*.pth
+*.npz
+*tinystories_sample_5M.txt
+*gpt2_merges.txt
+*gpt2_vocab.json

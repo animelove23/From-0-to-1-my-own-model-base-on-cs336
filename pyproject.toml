@@ -1,0 +1,25 @@
+[project]
+name = "cs336-basics"
+version = "0.1.0"
+description = "Small CS336 language model components"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.3",
+    "einops>=0.8",
+    "regex>=2024.0.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0", "numpy>=1.26"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["cs336_basics*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
