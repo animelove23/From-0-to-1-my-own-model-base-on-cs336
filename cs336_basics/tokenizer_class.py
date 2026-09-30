@@ -3,7 +3,7 @@ from token import tok_name
 
 import regex as re
 import typing
-class Tokenizer:
+class Tokenizer():
     def __init__(self, vocab, merges, special_tokens=None):
         self.vocab = vocab
         self.merges = merges
@@ -57,6 +57,6 @@ class Tokenizer:
     def decode(self, ids: list[int]) -> str:
         word = b''
         for i in ids:
-            word.join(self.vocab[i])
+            word+=(self.vocab[i])
         return word.decode("utf-8", errors="replace")
 

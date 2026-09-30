@@ -14,7 +14,11 @@ class RoPE(nn.Module):
         angle = frequency * position
         self.register_buffer("cosine_table", torch.cos(angle), persistent=False)
         self.register_buffer("sine_table", torch.sin(angle), persistent=False)
-    def forward(self, x: torch.Tensor, token_positions: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        token_positions = torch.arange(
+            x.shape[2],
+            device=x.device
+        )
         cosine_angle = self.cosine_table[token_positions]
         sine_angle = self.sine_table[token_positions]
         cosine_angle = cosine_angle.to(x.dtype)

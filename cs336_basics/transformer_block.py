@@ -7,17 +7,16 @@ from torch import nn
 
 
 class TransformerBlock(nn.Module):
-    def __init__(self,dff,d_model,n_heads,open_pos= True,theta = None,max_seq_len = None,token_positions = None):
+    def __init__(self,dff,d_model,n_heads,open_pos= True,theta = None,max_seq_len = None):
         super(TransformerBlock, self).__init__()
         self.dff = dff
         self.n_heads = n_heads
         self.open_pos = open_pos
         self.theta = theta
         self.max_seq_len = max_seq_len
-        self.token_positions = token_positions
         self.rmsnorm1 = RMSNorm(d_model)
         self.rmsnorm2 = RMSNorm(d_model)
-        self.causal_att = MultiHeadSelfAttention(d_model,n_heads,open_pos,theta,max_seq_len,token_positions)
+        self.causal_att = MultiHeadSelfAttention(d_model,n_heads,open_pos,theta,max_seq_len)
         self.ffn = SwiGLU(d_model,dff)
     def forward(self,x):
         # ---- Attention block ----

@@ -8,7 +8,7 @@ from cs336_basics.RoPE import RoPE
 from torch import nn
 
 class Transformer(nn.Module):
-    def __init__(self,dff,d_model,n_heads,vocab_size,context_length,num_layers,open_pos= True,theta = None,token_positions = None):
+    def __init__(self,dff,d_model,n_heads,vocab_size,context_length,num_layers,open_pos= True,theta = None):
         super(Transformer, self).__init__()
         self.transformer_layers = nn.ModuleList([
             TransformerBlock(
@@ -18,7 +18,6 @@ class Transformer(nn.Module):
                 open_pos,
                 theta,
                 context_length,
-                token_positions,
             )
             for _ in range(num_layers)
         ])

@@ -6,3 +6,9 @@
 !/cs336_basics/
 /cs336_basics/*
 !/cs336_basics/*.py
+!/cs336_basics/public/
+/cs336_basics/public/*
+!/cs336_basics/public/*.py
+/cs336_basics/training_together_simple.py
+/cs336_basics/communicate.py
+/cs336_basics/From_str_to_token.py

@@ -1,3 +1,4 @@
+import pickle
 from .pretokenization_example import pretoken_and_statistic
 from collections import Counter
 
@@ -41,11 +42,12 @@ def bpe_tokenization(input_path, vocab_size, special_tokens):
     return vocab, merge_way
 
 
-
-
 if __name__ == "__main__":
-    a,b = bpe_tokenization("/home/lianggon/cs336/data/TinyStoriesV2-GPT4-train.txt",10000,"<|endoftext|>")
-    with open("result.txt","w") as f:
-        for k,v in a.items():
-            f.write(f"{v}\n")
-
+    vocab,merge_way = bpe_tokenization("/home/lianggon/cs336/data/TinyStoriesV2-GPT4-train.txt",10000,["<|endoftext|>"])
+    with open("/home/lianggon/cs336/data/vocab.pkl","wb") as f:
+            pickle.dump(vocab, f)
+    with open("/home/lianggon/cs336/data/merges.pkl","wb") as f:
+            pickle.dump(merge_way, f)
+    print("vocab size:", len(vocab))
+    print("merges size:", len(merge_way))
+    print("saved successfully")
