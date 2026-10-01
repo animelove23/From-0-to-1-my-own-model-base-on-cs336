@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "model": "32M",
+  "nominal_tokens_million": 16,
+  "actual_tokens": 16001024,
+  "final_step": 7813,
+  "final_validation_loss": 2.723801112174988,
+  "best_validation_loss": 2.7234421491622927,
+  "best_validation_step": 7800,
+  "parameter_count": 30693888,
+  "config_fingerprint": "3e13da5bc4be842840de0edebce223332ec2eb102aa2e86fcd35555ef12211e1",
+  "elapsed_seconds": 1114.721578915
+}

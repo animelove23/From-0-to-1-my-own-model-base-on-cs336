@@ -9,6 +9,9 @@ class SwiGLU(nn.Module):
         self.w1_weight = nn.Parameter(torch.empty(dff or round(8*in_features/3/64)*64,in_features ,device=device, dtype=dtype))
         self.w3_weight = nn.Parameter(torch.empty(dff or round(8*in_features/3/64)*64,in_features ,device=device, dtype=dtype))
         self.w2_weight = nn.Parameter(torch.empty(in_features,dff or round(8*in_features/3/64)*64,device=device, dtype=dtype))
+        nn.init.xavier_normal_(self.w1_weight)
+        nn.init.xavier_normal_(self.w3_weight)
+        nn.init.xavier_normal_(self.w2_weight)
     def forward(self,x: torch.Tensor) -> torch.Tensor:
         gate = einsum(x,self.w1_weight,"... dff, out_features dff -> ... out_features")
         swi_output = gate*torch.sigmoid(gate)

@@ -12,3 +12,11 @@
 /cs336_basics/training_together_simple.py
 /cs336_basics/communicate.py
 /cs336_basics/From_str_to_token.py
+!/scalling_exp/
+!/scalling_exp/**
+/scalling_exp/**/__pycache__/
+/scalling_exp/**/*.pyc
+/scalling_exp/**/*.tmp
+/scalling_exp/**/checkpoints/*.pt
+!/scalling_exp/64m_model/**/checkpoints/*.pt
+!/.gitattributes
