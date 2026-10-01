@@ -1,8 +1,8 @@
 """Independent 4 x 4 model/token-budget experiments; existing source files are untouched.
 
-Prepare: uv run --no-sync python scalling_exp/run_scaling.py --prepare
-Run:     uv run --no-sync python scalling_exp/run_scaling.py --run
-Plot:    uv run --no-sync python scalling_exp/plot_scaling.py
+Prepare: python scalling_exp/run_scaling.py --prepare
+Run:     python scalling_exp/run_scaling.py --run
+Plot:    python scalling_exp/plot_scaling.py
 """
 import argparse
 import csv

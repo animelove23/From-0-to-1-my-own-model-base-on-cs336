@@ -4,22 +4,22 @@
 
 ```bash
 # 查看计划，不训练
-uv run --no-sync python scalling_exp/run_scaling.py
+python scalling_exp/run_scaling.py
 
 # 准备全部目录、配置和待运行图表，不训练
-uv run --no-sync python scalling_exp/run_scaling.py --prepare
+python scalling_exp/run_scaling.py --prepare
 
 # 顺序运行全部 16 组；已完成的组自动跳过，中断的组自动续跑
-uv run --no-sync python scalling_exp/run_scaling.py --run
+python scalling_exp/run_scaling.py --run
 
 # 只运行一个组合
-uv run --no-sync python scalling_exp/run_scaling.py --run --models 8M --budgets 16
+python scalling_exp/run_scaling.py --run --models 8M --budgets 16
 
 # 只重新生成两张图
-uv run --no-sync python scalling_exp/plot_scaling.py
+python scalling_exp/plot_scaling.py
 ```
 
-需要现有虚拟环境中的 PyTorch、NumPy、einops、Matplotlib。`--no-sync` 保留当前已经安装的绘图依赖。
+需要 Python 3.12/3.13 与 requirements.txt 中的依赖。
 
 ## 实验设计
 
@@ -79,3 +79,14 @@ scalling_exp/
 GitHub 仓库只包含 64M 模型的 .pt 权重（通过 Git LFS 存储）；其他模型保留配置、日志和结果，不上传权重。原始 training_together_simple.py 未上传，仓库中的实验入口直接读取已保存的实验默认配置。克隆后运行训练需要安装 Git LFS 并准备自己的训练数据；使用新数据时请指定 --data 与新的 --output-dir。
 
 当前训练集位于仓库根目录的 data/train.bin，也由 Git LFS 管理。已有实验清单只使用该文件前 332,008,126 字节，追加在后面的数据不会改变这批实验。服务器克隆后先运行 git lfs pull，再从仓库根目录执行上述命令；脚本会验证冻结前缀，允许数据文件位于新的绝对路径。
+
+在新服务器上克隆或更新仓库后，先安装 Git LFS 并运行 git lfs pull。然后从仓库根目录运行：
+
+```bash
+uv venv --python 3.13
+uv pip install -r scalling_exp/requirements.txt
+source .venv/bin/activate
+python scalling_exp/run_scaling.py --run --models 64M
+```
+
+已有 64M/16M 检查点会自动续跑；后续三个 token 预算按顺序执行。运行前可用 python -c "import torch; print(torch.cuda.is_available())" 检查 CUDA。

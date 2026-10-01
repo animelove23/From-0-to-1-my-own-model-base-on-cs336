@@ -1,0 +1,4 @@
+torch~=2.11.0
+numpy>=2.4,<3
+einops>=0.8,<1
+matplotlib>=3.10,<4
