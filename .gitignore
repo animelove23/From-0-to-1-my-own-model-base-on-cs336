@@ -20,3 +20,5 @@
 /scalling_exp/**/checkpoints/*.pt
 !/scalling_exp/64m_model/**/checkpoints/*.pt
 !/.gitattributes
+!/data/
+!/data/train.bin

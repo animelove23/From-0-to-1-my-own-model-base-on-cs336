@@ -77,3 +77,5 @@ scalling_exp/
 每种模型规模、每个 token 预算都有独立的权重目录。例如 `8m_model/8m_16mtoken/checkpoints/` 和 `8m_model/8m_32mtoken/checkpoints/` 完全分开；其他模型同样分开，共 16 个独立 checkpoints 文件夹。
 
 GitHub 仓库只包含 64M 模型的 .pt 权重（通过 Git LFS 存储）；其他模型保留配置、日志和结果，不上传权重。原始 training_together_simple.py 未上传，仓库中的实验入口直接读取已保存的实验默认配置。克隆后运行训练需要安装 Git LFS 并准备自己的训练数据；使用新数据时请指定 --data 与新的 --output-dir。
+
+当前训练集位于仓库根目录的 data/train.bin，也由 Git LFS 管理。已有实验清单只使用该文件前 332,008,126 字节，追加在后面的数据不会改变这批实验。服务器克隆后先运行 git lfs pull，再从仓库根目录执行上述命令；脚本会验证冻结前缀，允许数据文件位于新的绝对路径。

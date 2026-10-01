@@ -113,14 +113,16 @@ def prepare(args):
         manifest = json.loads(path.read_text())
         if manifest["settings"] != common or any(manifest["source_hashes"].get(name) != digest for name, digest in hashes.items()):
             raise ValueError("Existing experiment settings/source changed. Use the original settings or a new --output-dir.")
-        if str(args.data.resolve()) != manifest["data"]["path"]:
-            raise ValueError("Training data path differs from manifest")
-        expected_val = str(args.val_data.resolve()) if args.val_data else None
-        if expected_val != (manifest["validation_data"]["path"] if manifest["validation_data"] else None):
-            raise ValueError("Validation data path differs from manifest")
-        for description in (manifest["data"], manifest["validation_data"]):
-            if description and data_description(description["path"], description["size_bytes"]) != description:
-                raise ValueError("Frozen dataset content changed")
+        frozen_data = data_description(args.data, manifest["data"]["size_bytes"])
+        if frozen_data["sha256"] != manifest["data"]["sha256"]:
+            raise ValueError("Frozen training data prefix changed")
+        expected_val = manifest["validation_data"]
+        if bool(args.val_data) != bool(expected_val):
+            raise ValueError("Validation data setting differs from manifest")
+        if expected_val:
+            frozen_val = data_description(args.val_data, expected_val["size_bytes"])
+            if frozen_val["sha256"] != expected_val["sha256"]:
+                raise ValueError("Frozen validation data changed")
     else:
         data = data_description(args.data)
         validation = data_description(args.val_data) if args.val_data else None
@@ -148,7 +150,11 @@ def prepare(args):
             if config_path.exists() and json.loads(config_path.read_text()) != config:
                 raise ValueError(f"Run config changed: {config_path}")
             atomic_json(config_path, config)
-    return root, manifest
+    runtime_manifest = json.loads(json.dumps(manifest))
+    runtime_manifest["data"]["path"] = str(args.data.resolve())
+    if args.val_data:
+        runtime_manifest["validation_data"]["path"] = str(args.val_data.resolve())
+    return root, runtime_manifest
 
 
 def load_data(manifest):
@@ -325,7 +331,7 @@ def main():
     action.add_argument("--prepare", action="store_true", help="Create configs and pending plots; no training")
     action.add_argument("--run", action="store_true", help="Run selected independent experiments sequentially")
     parser.add_argument("--output-dir", type=Path, default=ROOT)
-    parser.add_argument("--data", type=Path, default=Path(DEFAULT_MANIFEST["data"]["path"]))
+    parser.add_argument("--data", type=Path, default=PROJECT / "data/train.bin" if (PROJECT / "data/train.bin").exists() else Path(DEFAULT_MANIFEST["data"]["path"]))
     parser.add_argument("--val-data", type=Path)
     parser.add_argument("--models", nargs="+", choices=list(MODELS), default=list(MODELS))
     parser.add_argument("--budgets", nargs="+", type=int, choices=list(STEPS), default=list(STEPS))
