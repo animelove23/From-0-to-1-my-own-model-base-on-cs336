@@ -1,4 +1,4 @@
-# Track model sources and repository metadata only.
+# Track model sources and scaling-analysis artifacts only.
 *
 !/.gitignore
 !/README.md
@@ -17,8 +17,7 @@
 /scalling_exp/**/__pycache__/
 /scalling_exp/**/*.pyc
 /scalling_exp/**/*.tmp
-/scalling_exp/**/checkpoints/*.pt
-!/scalling_exp/64m_model/**/checkpoints/*.pt
-!/.gitattributes
-!/data/
-!/data/train.bin
+/scalling_exp/**/checkpoints/
+/scalling_exp/**/*.pt
+/scalling_exp/**/*.bin
+/data/
