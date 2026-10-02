@@ -2,19 +2,17 @@
 
 从零实现语言模型的组件、训练与评估。 
 目前已实现实验
-1. 64M 参数下训练最佳权重曲线
+1. 64M 参数下训练损失曲线
 2. 16组不同规模模型于训练数据对scaling law 进行观察
 3. 对Pre-norm(post-norm, no-norm), RoPE, FFN 进行四组消融实验
 
-## 64M 参数下训练最佳权重曲线
+## 64M 参数下训练损失曲线
 
 <p align="center">
   <a href="scalling_exp/64m_model/64m_128mtoken/best_checkpoint_training_curve.png">
-    <img src="scalling_exp/64m_model/64m_128mtoken/best_checkpoint_training_curve.png" alt="64M 参数模型在 128M token 预算下的训练与验证损失曲线，标出最佳检查点" width="96%">
+    <img src="scalling_exp/64m_model/64m_128mtoken/best_checkpoint_training_curve.png" alt="64M 参数模型在 128M token 预算下的训练与验证损失曲线" width="96%">
   </a>
 </p>
-
-64M 模型实际包含约 **66.1M** 参数，在 **128M tokens** 预算下训练。左侧展示完整训练轨迹，右侧放大最后 32M tokens 的收敛过程。最佳权重出现在第 **62,100 步**，验证损失为 **1.5753**；第 62,500 步结束时的验证损失为 **1.5758**。图表由[Matplotlib 绘图脚本](scalling_exp/plot_64m_best_checkpoint.py)读取[逐步训练记录](scalling_exp/64m_model/64m_128mtoken/training_log.csv)生成，数值与[实验结果](scalling_exp/64m_model/64m_128mtoken/result.json)一致。
 
 ## Scaling Law 探索 · 模型规模 × 训练 token
 
