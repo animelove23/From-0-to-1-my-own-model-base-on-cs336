@@ -40,16 +40,17 @@
 
 ## 8M 基线与消融实验
 
-<table>
-  <tr>
-    <th width="50%">8M 模型 · 16M tokens 训练曲线</th>
-    <th width="50%">四组消融实验 · 验证损失曲线</th>
-  </tr>
-  <tr>
-    <td><a href="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png"><img src="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png" alt="8M 模型训练至最佳权重的训练与验证损失曲线" width="100%"></a></td>
-    <td><a href="ablation/best_checkpoint_loss_curves.png"><img src="ablation/best_checkpoint_loss_curves.png" alt="四组消融实验的验证损失曲线" width="100%"></a></td>
-  </tr>
-</table>
+### 8M 模型 · 16M tokens 训练曲线
+
+<p align="center">
+  <a href="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png"><img src="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png" alt="8M 模型训练至最佳权重的训练与验证损失曲线" width="90%"></a>
+</p>
+
+### 四组消融实验 · 验证损失曲线
+
+<p align="center">
+  <a href="ablation/best_checkpoint_loss_curves.png"><img src="ablation/best_checkpoint_loss_curves.png" alt="四组消融实验的验证损失曲线" width="100%"></a>
+</p>
 
 ### 消融实验对比
 
