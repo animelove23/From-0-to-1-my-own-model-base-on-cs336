@@ -1,17 +1,41 @@
 # From-0-to-1-my-own-model-base-on-cs336
-基于 cs336 手写大模型架构以及训练基座，后续会根据学习进度加入训推加速等 infra 优化、模型架构改进、实验对比和多模态架构。
 
-## 4×4 Scaling：训练 token 与最终验证损失
+从零实现语言模型的组件、训练与评估。这里用 **4 种模型规模 × 4 档训练 token 预算** 观察验证损失随计算投入变化的趋势；模型结构与公开脚本见下方。
 
-![四种模型在不同训练 token 预算下的最终验证损失](scalling_exp/tokens_vs_validation_loss.png)
+> **实验速览**　16 / 16 组完成　·　最佳组合 64M × 128M tokens　·　最低最终验证损失 **1.5758**
 
-四种模型的验证损失都随训练 token 增加而下降；在每档 token 预算下，64M 模型的损失最低。64M 模型从 16M 到 128M token 的损失由 2.542 降至 1.576，继续增加 token 仍有收益，但每次翻倍带来的改善逐渐缩小。
+## 64M 参数下训练最佳权重曲线
 
-## 4×4 Scaling：最终验证损失热力图
+<p align="center">
+  <a href="scalling_exp/64m_model/64m_128mtoken/best_checkpoint_training_curve.svg">
+    <img src="scalling_exp/64m_model/64m_128mtoken/best_checkpoint_training_curve.svg" alt="64M 参数模型在 128M token 预算下的训练与验证损失曲线，标出最佳检查点" width="96%">
+  </a>
+</p>
 
-![四种模型与四档训练 token 的最终验证损失热力图](scalling_exp/validation_loss_heatmap.png)
+64M 模型实际包含约 **66.1M** 参数，在 **128M tokens** 预算下训练。左侧展示完整训练轨迹，右侧放大最后 32M tokens 的收敛过程。最佳权重出现在第 **62,100 步**，验证损失为 **1.5753**；第 62,500 步结束时的验证损失为 **1.5758**。图表由[逐步训练记录](scalling_exp/64m_model/64m_128mtoken/training_log.csv)生成，数值与[实验结果](scalling_exp/64m_model/64m_128mtoken/result.json)一致。
 
-16 组实验均已完成。热力图右下角的 64M 模型、128M token 组合达到最低最终验证损失 **1.576**；在相同 token 预算下，模型规模越大，损失越低。这些数值来自单个随机种子的最终一步评估，不是训练期间的最佳检查点损失。[查看完整结果表](scalling_exp/results_summary.csv)。
+## Scaling Law 探索 · 模型规模 × 训练 token
+
+**实验问题：** 在 8M、16M、32M、64M 四档模型规模和 16M、32M、64M、128M 四档 token 预算下，最终验证损失如何变化？两张图从不同角度展示同一组 **4 × 4** 实验。
+
+<table>
+  <tr>
+    <th width="50%">A · Token 预算与验证损失</th>
+    <th width="50%">B · 16 组实验全景</th>
+  </tr>
+  <tr>
+    <td><a href="scalling_exp/tokens_vs_validation_loss.png"><img src="scalling_exp/tokens_vs_validation_loss.png" alt="四种模型在不同训练 token 预算下的最终验证损失曲线" width="100%"></a></td>
+    <td><a href="scalling_exp/validation_loss_heatmap.png"><img src="scalling_exp/validation_loss_heatmap.png" alt="四种模型与四档训练 token 预算的最终验证损失热力图" width="100%"></a></td>
+  </tr>
+  <tr>
+    <td>沿每条曲线向右：更多训练 token 对应更低的最终验证损失。</td>
+    <td>沿每列向下：相同 token 预算下，更大模型对应更低的最终验证损失。</td>
+  </tr>
+</table>
+
+**观察。** 64M 模型从 16M 训练 token 增加到 128M，最终验证损失由 **2.5423** 降至 **1.5758**。在这四档预算中，每次 token 翻倍仍有收益，但改善幅度逐渐缩小。64M × 128M 是当前网格中的最佳组合。
+
+**解释边界。** 上述 16 个数值均是单次运行的**最终一步**评估，而上方的 1.5753 是训练期间的**最佳检查点**结果。它们支持当前范围内的 scaling 趋势；尚未拟合幂律指数，也没有多随机种子的不确定性估计。[查看完整结果表](scalling_exp/results_summary.csv)。
 
 ## 脚本用途
 
