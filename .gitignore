@@ -1,4 +1,4 @@
-# Track model sources and scaling-analysis artifacts only.
+# Track model sources and selected analysis artifacts only.
 *
 !/.gitignore
 !/README.md
@@ -21,3 +21,6 @@
 /scalling_exp/**/*.pt
 /scalling_exp/**/*.bin
 /data/
+!/ablation/
+/ablation/*
+!/ablation/best_checkpoint_loss_curves.png

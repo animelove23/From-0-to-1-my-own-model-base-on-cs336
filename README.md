@@ -38,6 +38,28 @@
 
 **解释边界。** 上述 16 个数值均是单次运行的**最终一步**评估，而上方的 1.5753 是训练期间的**最佳检查点**结果。它们支持当前范围内的 scaling 趋势；尚未拟合幂律指数，也没有多随机种子的不确定性估计。[查看完整结果表](scalling_exp/results_summary.csv)。
 
+## 8M 基线与消融实验
+
+<table>
+  <tr>
+    <th width="50%">8M 模型 · 16M tokens 训练曲线</th>
+    <th width="50%">四组消融实验 · 验证损失曲线</th>
+  </tr>
+  <tr>
+    <td><a href="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png"><img src="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png" alt="8M 模型训练至最佳权重的训练与验证损失曲线" width="100%"></a></td>
+    <td><a href="ablation/best_checkpoint_loss_curves.png"><img src="ablation/best_checkpoint_loss_curves.png" alt="四组消融实验的验证损失曲线" width="100%"></a></td>
+  </tr>
+</table>
+
+### 消融实验对比
+
+| 实验设置 | 最佳已保存权重的验证损失 |
+| --- | ---: |
+| 无旋转位置编码 | 3.4619 |
+| Sigmoid Linear Unit 前馈网络 | 3.1916 |
+| 后归一化 Transformer 块 | 3.3680 |
+| 无预归一化 Transformer 块 | 2.3493 |
+
 ## 脚本用途
 
 `cs336_basics/` 包含模型、分词器与优化器。`cs336_basics/public/` 中是可以公开的入口脚本；个人实验的原文件和具体参数不上传。
