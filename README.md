@@ -51,24 +51,30 @@
 
 ### 8M 模型 · 16M tokens 训练曲线
 
+根据 `training_log.before_final_eval.csv` 的训练过程和 `training_log.csv` 追加的最终评估重绘。最佳已保存权重在第 **7,500** 步，验证损失为 **2.3294**；第 **7,813** 步最终验证损失为 **2.3727**。图中训练损失的深蓝线为 21 个记录点的移动平均，橙线为原始验证结果。这是单独提供的 8M 运行记录，其结果不并入上方 4 × 4 scaling 网格。
+
 <p align="center">
   <a href="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png"><img src="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png" alt="8M 模型训练至最佳权重的训练与验证损失曲线" width="90%"></a>
 </p>
 
 ### 四组消融实验 · 验证损失曲线
 
+四张单独的曲线分别来自工作区中的 `no_pos_log.csv`、`silu_log.csv`、`post_norm_log.csv` 和 `no_prenormtraining_log.csv`；下图按相同顺序合并展示。橙点标记每 500 步保存一次的权重中验证损失最低的一次。
+
 <p align="center">
   <a href="ablation/best_checkpoint_loss_curves.png"><img src="ablation/best_checkpoint_loss_curves.png" alt="四组消融实验的验证损失曲线" width="100%"></a>
 </p>
 
+单独查看：[无旋转位置编码](ablation/no_rope_loss_curve.png) · [SiLU 前馈网络](ablation/silu_loss_curve.png) · [后归一化](ablation/post_norm_loss_curve.png) · [无预归一化](ablation/no_pre_norm_loss_curve.png)。
+
 ### 消融实验对比
 
-| 实验设置 | 最佳已保存权重的验证损失 |
-| --- | ---: |
-| 无旋转位置编码 | 3.4619 |
-| Sigmoid Linear Unit 前馈网络 | 3.1916 |
-| 后归一化 Transformer 块 | 3.3680 |
-| 无预归一化 Transformer 块 | 2.3493 |
+| 实验设置 | 最佳已保存权重的验证损失（第 7,500 步） | 最终验证损失（第 7,813 步） |
+| --- | ---: | ---: |
+| 无旋转位置编码 | 2.5268 | 2.5682 |
+| Sigmoid Linear Unit 前馈网络 | 2.4501 | 2.4890 |
+| 后归一化 Transformer 块 | 2.3211 | 2.3607 |
+| 无预归一化 Transformer 块 | 2.3357 | 2.3712 |
 
 ## 脚本用途
 

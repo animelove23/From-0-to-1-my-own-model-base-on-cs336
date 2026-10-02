@@ -4,10 +4,10 @@
   "nominal_tokens_million": 16,
   "actual_tokens": 16001024,
   "final_step": 7813,
-  "final_validation_loss": 3.0789241552352906,
-  "best_validation_loss": 3.0789241552352906,
-  "best_validation_step": 7813,
+  "final_validation_loss": 2.3726985335350035,
+  "best_validation_loss": 2.3294238328933714,
+  "best_validation_step": 7500,
   "parameter_count": 8530176,
-  "config_fingerprint": "87229c77418363965a2d1449e0afe542cdd9b6114f120f97475cab19f026f47f",
-  "elapsed_seconds": 490.42252872899917
+  "config_fingerprint": "51e4b43a467704b147e8f57a1a0bce6dd445e41d6effda5bf9c71eec2d95b7b9",
+  "provenance": "Manual training_together_simple.py run; final validation uses the reconstructed stochastic NumPy stream, checked against step 7500."
 }
