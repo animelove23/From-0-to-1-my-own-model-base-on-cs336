@@ -57,7 +57,10 @@
   <a href="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png"><img src="scalling_exp/8m_model/8m_16mtoken/best_checkpoint_training_curve.png" alt="8M 模型训练至最佳权重的训练与验证损失曲线" width="90%"></a>
 </p>
 
-### 四组消融实验
+### 四组消融实验 · 验证损失曲线
+
+四张单独的曲线分别来自工作区中的 `no_pos_log.csv`、`silu_log.csv`、`post_norm_log.csv` 和 `no_prenormtraining_log.csv`；下图按相同顺序合并展示。橙点标记每 500 步保存一次的权重中验证损失最低的一次。
+
 <p align="center">
   <a href="ablation/best_checkpoint_loss_curves.png"><img src="ablation/best_checkpoint_loss_curves.png" alt="四组消融实验的验证损失曲线" width="100%"></a>
 </p>
