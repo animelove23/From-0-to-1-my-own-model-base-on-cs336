@@ -4,6 +4,7 @@
 目前已实现实验
 1. 64M 参数下训练最佳权重曲线
 2. 16组不同规模模型于训练数据对scaling law 进行观察
+3. 对Pre-norm(post-norm, no-norm), RoPE, FFN 进行四组消融实验
 
 ## 64M 参数下训练最佳权重曲线
 
