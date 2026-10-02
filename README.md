@@ -1,6 +1,18 @@
 # From-0-to-1-my-own-model-base-on-cs336
 基于 cs336 手写大模型架构以及训练基座，后续会根据学习进度加入训推加速等 infra 优化、模型架构改进、实验对比和多模态架构。
 
+## 4×4 Scaling：训练 token 与最终验证损失
+
+![四种模型在不同训练 token 预算下的最终验证损失](scalling_exp/tokens_vs_validation_loss.png)
+
+四种模型的验证损失都随训练 token 增加而下降；在每档 token 预算下，64M 模型的损失最低。64M 模型从 16M 到 128M token 的损失由 2.542 降至 1.576，继续增加 token 仍有收益，但每次翻倍带来的改善逐渐缩小。
+
+## 4×4 Scaling：最终验证损失热力图
+
+![四种模型与四档训练 token 的最终验证损失热力图](scalling_exp/validation_loss_heatmap.png)
+
+16 组实验均已完成。热力图右下角的 64M 模型、128M token 组合达到最低最终验证损失 **1.576**；在相同 token 预算下，模型规模越大，损失越低。这些数值来自单个随机种子的最终一步评估，不是训练期间的最佳检查点损失。[查看完整结果表](scalling_exp/results_summary.csv)。
+
 ## 脚本用途
 
 `cs336_basics/` 包含模型、分词器与优化器。`cs336_basics/public/` 中是可以公开的入口脚本；个人实验的原文件和具体参数不上传。
